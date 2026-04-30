@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .scheme-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border-top: 4px solid #667eea;
+    }
+
+    .scheme-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .scheme-card .card-body {
+        padding: 25px;
+    }
+
+    .scheme-card h5 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 15px;
+    }
+
+    .scheme-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+    }
+
+    .scheme-info {
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .scheme-info strong {
+        color: #374151;
+        font-weight: 600;
+    }
+
+    .scheme-info p {
+        margin: 0;
+        color: #6b7280;
+    }
+
+    .scheme-link {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 8px 16px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    .scheme-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+        color: white;
+    }
+
+    .scheme-link i {
+        margin-right: 5px;
+    }
+
+    .credit-score-card {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .credit-score-card h4 {
+        margin: 0 0 10px 0;
+        font-size: 1rem;
+        font-weight: 600;
+        opacity: 0.95;
+    }
+
+    .credit-score-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .credit-score-info {
+        font-size: 0.85rem;
+        margin-top: 10px;
+        opacity: 0.9;
+    }
+
+    .schemes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 25px;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #667eea;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #667eea;
+    }
+
+    .section-title:first-of-type {
+        margin-top: 0;
+    }
+
+    @media (max-width: 768px) {
+        .schemes-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .credit-score-value {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <h3 class="mb-4">{{ t('Grow Scheme') }}</h3>
+
+    <!-- Credit Score Card -->
+    <div class="credit-score-card">
+        <h4>{{ t('Your current credit score') }}</h4>
+        <p class="credit-score-value">{{ score }}</p>
+        <p class="credit-score-info">Score above 80 is excellent. Build your credit by maintaining regular savings and timely loan repayments.</p>
+    </div>
+
+    <!-- Government Schemes Section -->
+    <div class="section-title">Central Government Schemes</div>
+    
+    <div class="schemes-grid">
+        <!-- Scheme 1: PM Women SHG Loan Scheme -->
+        <div class="scheme-card card shadow-sm">
+            <div class="card-body">
+                <span class="scheme-badge">Government of India</span>
+                <h5 class="card-title">PM Women SHG Loan Scheme</h5>
+                <div class="scheme-info">
+                    <p><strong>Eligibility:</strong> Member of registered SHG for at least 6 months, regular savings.</p>
+                </div>
+                <div class="scheme-info">
+                    <p><strong>Benefits:</strong> Low-interest loans up to ₹1,00,000, flexible repayment options.</p>
+                </div>
+                <a href="https://www.pib.gov.in/PressNoteDetails.aspx?NoteId=152064&ModuleId=3&reg=3&lang=2" target="_blank" class="scheme-link">
+                    <i class="bi bi-box-arrow-up-right"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- Scheme 2: Pradhan Mantri Mudra Yojana -->
+        <div class="scheme-card card shadow-sm">
+            <div class="card-body">
+                <span class="scheme-badge">Government of India</span>
+                <h5 class="card-title">Pradhan Mantri Mudra Yojana</h5>
+                <div class="scheme-info">
+                    <p><strong>Eligibility:</strong> Women entrepreneurs, self-employed individuals, SHG members.</p>
+                </div>
+                <div class="scheme-info">
+                    <p><strong>Benefits:</strong> Loans up to ₹10,00,000 at competitive rates for business expansion.</p>
+                </div>
+                <a href="https://www.mudra.org.in/" target="_blank" class="scheme-link">
+                    <i class="bi bi-box-arrow-up-right"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- Scheme 3: Tamil Nadu Mahalir Thittam -->
+        <div class="scheme-card card shadow-sm">
+            <div class="card-body">
+                <span class="scheme-badge">Tamil Nadu Government</span>
+                <h5 class="card-title">Tamil Nadu Mahalir Thittam</h5>
+                <div class="scheme-info">
+                    <p><strong>Eligibility:</strong> Women SHGs registered in Tamil Nadu.</p>
+                </div>
+                <div class="scheme-info">
+                    <p><strong>Benefits:</strong> Subsidized loans, training, and entrepreneurship support.</p>
+                </div>
+                <a href="https://kmut.tn.gov.in/" target="_blank" class="scheme-link">
+                    <i class="bi bi-box-arrow-up-right"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- Scheme 4: Stand Up India Scheme -->
+        <div class="scheme-card card shadow-sm">
+            <div class="card-body">
+                <span class="scheme-badge">Government of India</span>
+                <h5 class="card-title">Stand Up India Scheme</h5>
+                <div class="scheme-info">
+                    <p><strong>Eligibility:</strong> Women entrepreneurs, marginalized sections, SHG members.</p>
+                </div>
+                <div class="scheme-info">
+                    <p><strong>Benefits:</strong> Business loans ₹10 lakh to ₹1 crore at reasonable interest rates.</p>
+                </div>
+                <a href="https://www.standupmitra.in/" target="_blank" class="scheme-link">
+                    <i class="bi bi-box-arrow-up-right"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- Scheme 5: Mahila Samridhi Yojana -->
+        <div class="scheme-card card shadow-sm">
+            <div class="card-body">
+                <span class="scheme-badge">Government of India</span>
+                <h5 class="card-title">Mahila Samridhi Yojana</h5>
+                <div class="scheme-info">
+                    <p><strong>Eligibility:</strong> Women aged 18-40 years interested in income-generating activities.</p>
+                </div>
+                <div class="scheme-info">
+                    <p><strong>Benefits:</strong> Savings-linked credit facility, skill development training.</p>
+                </div>
+                <a href="https://nskfdc.nic.in/en/content/schemes-programmes/mahila-samridhi-yojna-msy" target="_blank" class="scheme-link">
+                    <i class="bi bi-box-arrow-up-right"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- Scheme 6: Indira Mahila Yojana -->
+        <div class="scheme-card card shadow-sm">
+            <div class="card-body">
+                <span class="scheme-badge">Government of India</span>
+                <h5 class="card-title">Indira Mahila Yojana</h5>
+                <div class="scheme-info">
+                    <p><strong>Eligibility:</strong> SHG members with savings account and 3-year history.</p>
+                </div>
+                <div class="scheme-info">
+                    <p><strong>Benefits:</strong> Term loans at concessional rates, insurance coverage.</p>
+                </div>
+                <a href="https://suryapet.telangana.gov.in/scheme/indira-mahila-shakthi/" target="_blank" class="scheme-link">
+                    <i class="bi bi-box-arrow-up-right"></i> Learn More
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- How to Apply Section -->
+    <div class="section-title" style="margin-top: 50px;">How to Apply</div>
+    
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div>
+                    <h6 style="color: #667eea; font-weight: 700; margin-bottom: 10px;">
+                        <i class="bi bi-1-circle-fill"></i> Check Eligibility
+                    </h6>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin: 0;">
+                        Review the eligibility criteria for each scheme to find the best match for you.
+                    </p>
+                </div>
+                <div>
+                    <h6 style="color: #667eea; font-weight: 700; margin-bottom: 10px;">
+                        <i class="bi bi-2-circle-fill"></i> Gather Documents
+                    </h6>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin: 0;">
+                        Prepare required documents: ID proof, address proof, bank statements, SHG registration certificate.
+                    </p>
+                </div>
+                <div>
+                    <h6 style="color: #667eea; font-weight: 700; margin-bottom: 10px;">
+                        <i class="bi bi-3-circle-fill"></i> Apply Online/Offline
+                    </h6>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin: 0;">
+                        Visit the official scheme website or your nearest bank to submit your application.
+                    </p>
+                </div>
+                <div>
+                    <h6 style="color: #667eea; font-weight: 700; margin-bottom: 10px;">
+                        <i class="bi bi-4-circle-fill"></i> Approval & Disbursement
+                    </h6>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin: 0;">
+                        Wait for approval and loan amount will be disbursed to your bank account.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

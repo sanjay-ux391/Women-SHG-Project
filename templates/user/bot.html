@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <h3 class="mb-3">{{ t('AI Assistant Bot') }}</h3>
+
+    <div class="card shadow-sm chat-card">
+        <div class="card-body d-flex flex-column" style="height: 420px;">
+            <div id="chat-window" class="flex-grow-1 mb-3 overflow-auto border rounded p-2 bg-light">
+                <div class="text-muted small mb-2">{{ t('Ask me about savings, loans, schemes or credit score.') }}</div>
+            </div>
+            <div class="input-group">
+                <input id="chat-input" type="text" class="form-control" placeholder="{{ t('Type your question...') }}">
+                <button id="chat-send" class="btn btn-primary">
+                    <i class="bi bi-send"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+const chatWindow = document.getElementById('chat-window');
+const input = document.getElementById('chat-input');
+const sendBtn = document.getElementById('chat-send');
+
+function addMessage(text, sender) {
+    const div = document.createElement('div');
+    div.classList.add('mb-2');
+    const bubble = document.createElement('div');
+    bubble.classList.add('p-2', 'rounded');
+    if (sender === 'user') {
+        bubble.classList.add('bg-primary', 'text-white', 'ms-auto');
+    } else {
+        bubble.classList.add('bg-white', 'border');
+    }
+    bubble.style.maxWidth = '80%';
+    bubble.innerText = text;
+    div.appendChild(bubble);
+    chatWindow.appendChild(div);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+sendBtn.addEventListener('click', () => {
+    const q = input.value.trim();
+    if (!q) return;
+    addMessage(q, 'user');
+    input.value = '';
+    fetch("{{ url_for('user.bot_ask') }}", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({question: q})
+    })
+    .then(r => r.json())
+    .then(d => addMessage(d.answer, 'bot'))
+    .catch(() => addMessage("Sorry, something went wrong.", 'bot'));
+});
+
+input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        sendBtn.click();
+    }
+});
+</script>
+{% endblock %}

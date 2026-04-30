@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <h3 class="mb-3">{{ t('Admin Dashboard') }}</h3>
+
+    <!-- Reminder alerts -->
+    {% if upcoming_due_loans %}
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        {{ t('Some loans are due in the next 3 days.') }}
+    </div>
+    {% endif %}
+    {% if users_no_savings %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-1"></i>
+        {{ t('Some users have not paid savings for this month.') }}
+    </div>
+    {% endif %}
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1">{{ t('Total Users') }}</p>
+                            <h4 class="mb-0">{{ total_users }}</h4>
+                        </div>
+                        <div class="icon-circle bg-primary text-white">
+                            <i class="bi bi-people"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1">{{ t('Pending Approvals') }}</p>
+                            <h4 class="mb-0">{{ pending_approvals }}</h4>
+                        </div>
+                        <div class="icon-circle bg-warning text-white">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1">{{ t('Total Income') }}</p>
+                            <h4 class="mb-0">₹{{ '%.2f'|format(total_income) }}</h4>
+                        </div>
+                        <div class="icon-circle bg-success text-white">
+                            <i class="bi bi-currency-rupee"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1">{{ t('Flagged Accounts') }}</p>
+                            <h4 class="mb-0">{{ flagged_accounts }}</h4>
+                        </div>
+                        <div class="icon-circle bg-danger text-white">
+                            <i class="bi bi-exclamation-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-3">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">{{ t('Savings vs Loans') }}</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="barChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">{{ t('Repayment Rate') }}</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="pieChart" height="120"></canvas>
+                    <p class="mt-3 mb-0 small text-muted">
+                        {{ t('Average credit score') }}: <strong>{{ analytics.avg_score }}</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+fetch("{{ url_for('admin.analytics_json') }}")
+    .then(r => r.json())
+    .then(data => {
+        const barCtx = document.getElementById('barChart');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: data.bar.labels,
+                datasets: [{
+                    label: '{{ t("Amount (₹)") }}',
+                    data: data.bar.data,
+                    backgroundColor: ['#0d6efd', '#20c997']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        const pieCtx = document.getElementById('pieChart');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: data.pie.labels,
+                datasets: [{
+                    data: data.pie.data,
+                    backgroundColor: ['#198754', '#ffc107']
+                }]
+            },
+            options: { responsive: true }
+        });
+    });
+</script>
+{% endblock %}

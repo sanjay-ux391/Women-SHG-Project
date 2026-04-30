@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <h4 class="mb-3">{{ t('Durable Payments / Loans') }}</h4>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>{{ t('User') }}</th>
+                        <th>{{ t('Amount') }}</th>
+                        <th>{{ t('Interest %') }}</th>
+                        <th>{{ t('Issue Date') }}</th>
+                        <th>{{ t('Due Date') }}</th>
+                        <th>{{ t('Status') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in loans %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ loan.user.full_name }}</td>
+                        <td>₹{{ '%.2f'|format(loan.loan_amount) }}</td>
+                        <td>{{ loan.interest_rate }}</td>
+                        <td>{{ loan.issue_date }}</td>
+                        <td>{{ loan.due_date }}</td>
+                        <td>
+                            <span class="badge
+                                {% if loan.status == 'Paid' %}bg-success
+                                {% elif loan.status == 'Approved' %}bg-primary
+                                {% else %}bg-warning text-dark{% endif %}">
+                                {{ loan.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.update_loan', loan_id=loan.id) }}" class="btn btn-sm btn-outline-primary">
+                                {{ t('Update') }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-3">
+                            {{ t('No loans found.') }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

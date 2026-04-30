@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-3">
+    <h4 class="mb-3">{{ t('Approve Loan Status') }}</h4>
+
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <p class="mb-1"><strong>{{ t('User') }}:</strong> {{ loan.user.full_name }}</p>
+            <p class="mb-1"><strong>{{ t('Amount') }}:</strong> ₹{{ loan.loan_amount }}</p>
+            <p class="mb-1"><strong>{{ t('Interest Rate') }}:</strong> {{ loan.interest_rate }}%</p>
+            <p class="mb-1"><strong>{{ t('Due Date') }}:</strong> {{ loan.due_date }}</p>
+            <p class="mb-0"><strong>{{ t('Current Status') }}:</strong> {{ loan.status }}</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.status.label(class="form-label") }}
+                    {{ form.status(class="form-select") }}
+                </div>
+                <button class="btn btn-primary">{{ t('Update') }}</button>
+                <a href="{{ url_for('admin.durable_payments') }}" class="btn btn-outline-secondary ms-2">{{ t('Back') }}</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

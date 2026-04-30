@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .top-navbar, .sidebar {
+        display: none !important;
+    }
+
+    .main-content {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    .resend-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        width: 95%;
+        padding: 50px 40px;
+        animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .resend-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .otp-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        margin: 0 auto 20px;
+    }
+
+    .resend-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 10px;
+    }
+
+    .resend-header p {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .email-info {
+        background: #f0f9ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border-left: 4px solid #0ea5e9;
+    }
+
+    .email-info p {
+        color: #0c4a6e;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .back-section {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .back-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .back-link:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+
+    .alert {
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #065f46;
+        border-left-color: #10b981;
+    }
+
+    .alert-danger {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left-color: #dc2626;
+    }
+
+    .alert-info {
+        background: #eff6ff;
+        color: #0c4a6e;
+        border-left-color: #0ea5e9;
+    }
+</style>
+
+<div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="resend-container">
+        <div class="resend-header">
+            <div class="otp-icon">
+                <i class="bi bi-envelope-open"></i>
+            </div>
+            <h2>Resend OTP</h2>
+            <p>Request a new one-time password</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'danger' else 'info' }}">
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="email-info">
+            <p>✓ Sending OTP to: <strong>{{ email }}</strong></p>
+        </div>
+
+        <form method="POST" novalidate>
+            <button type="submit" class="submit-btn">Send New OTP</button>
+        </form>
+
+        <div class="back-section">
+            <p style="color: #6b7280; font-size: 0.9rem;">Want to enter your OTP?</p>
+            <a href="{{ url_for('auth.verify_email') }}" class="back-link">← Back to Verification</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

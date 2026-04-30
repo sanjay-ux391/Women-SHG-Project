@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .top-navbar, .sidebar {
+        display: none !important;
+    }
+
+    .main-content {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    .verify-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        width: 95%;
+        padding: 50px 40px;
+        animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .verify-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .verify-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 10px;
+    }
+
+    .verify-header p {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .otp-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        margin: 0 auto 20px;
+    }
+
+    .email-info {
+        background: #f0f9ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border-left: 4px solid #0ea5e9;
+    }
+
+    .email-info p {
+        color: #0c4a6e;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1.5rem;
+        text-align: center;
+        letter-spacing: 5px;
+        transition: all 0.3s;
+        font-weight: bold;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .resend-section {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .resend-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .resend-link:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+
+    .timer {
+        color: #f59e0b;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    .alert {
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #065f46;
+        border-left-color: #10b981;
+    }
+
+    .alert-danger {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left-color: #dc2626;
+    }
+
+    .alert-info {
+        background: #eff6ff;
+        color: #0c4a6e;
+        border-left-color: #0ea5e9;
+    }
+</style>
+
+<div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="verify-container">
+        <div class="verify-header">
+            <div class="otp-icon">
+                <i class="bi bi-envelope-check"></i>
+            </div>
+            <h2>Verify Email</h2>
+            <p>Enter the OTP sent to your email</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'danger' else 'info' }}">
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="email-info">
+            <p>✓ OTP sent to: <strong>{{ email }}</strong></p>
+        </div>
+
+        <form method="POST" novalidate>
+            <div class="form-group">
+                <label for="otp">Enter OTP</label>
+                <input 
+                    type="text" 
+                    id="otp" 
+                    name="otp" 
+                    placeholder="000000" 
+                    maxlength="6" 
+                    required
+                    autocomplete="off"
+                >
+            </div>
+
+            <button type="submit" class="submit-btn">Verify OTP</button>
+        </form>
+
+        <div class="resend-section">
+            <p style="color: #6b7280; font-size: 0.9rem;">Didn't receive OTP?</p>
+            <a href="{{ url_for('auth.resend_otp') }}" class="resend-link">Resend OTP</a>
+            <div class="timer">
+                ⏱️ OTP expires in 10 minutes
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-focus on OTP input
+    document.getElementById('otp').focus();
+    
+    // Only allow numbers
+    document.getElementById('otp').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+</script>
+
+{% endblock %}

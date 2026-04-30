@@ -1,0 +1,626 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    }
+
+    .profile-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 10px 0;
+    }
+
+    .profile-header p {
+        font-size: 0.95rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+
+    .profile-container {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 30px;
+    }
+
+    .profile-sidebar {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        height: fit-content;
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        margin: 0 auto 20px;
+        color: white;
+    }
+
+    .profile-name {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .profile-name h4 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0 0 5px 0;
+    }
+
+    .profile-name p {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .profile-status {
+        background: #ecfdf5;
+        color: #065f46;
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .profile-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-profile {
+        padding: 10px 15px;
+        border: 2px solid #667eea;
+        background: transparent;
+        color: #667eea;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-profile:hover {
+        background: #667eea;
+        color: white;
+    }
+
+    .btn-profile.primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+    }
+
+    .btn-profile.primary:hover {
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .profile-content {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-tabs {
+        display: flex;
+        border-bottom: 2px solid #e5e7eb;
+        overflow-x: auto;
+    }
+
+    .profile-tab {
+        padding: 15px 20px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        color: #6b7280;
+        transition: all 0.3s;
+        white-space: nowrap;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+    }
+
+    .profile-tab.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+    }
+
+    .profile-tab:hover {
+        color: #667eea;
+    }
+
+    .profile-tab-content {
+        display: none;
+        padding: 30px;
+    }
+
+    .profile-tab-content.active {
+        display: block;
+    }
+
+    .profile-field {
+        margin-bottom: 25px;
+    }
+
+    .profile-field label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    .profile-field-value {
+        background: #f9fafb;
+        padding: 12px 15px;
+        border-radius: 8px;
+        color: #1f2937;
+        font-size: 0.95rem;
+        border: 1px solid #e5e7eb;
+    }
+
+    .profile-field-value.empty {
+        color: #9ca3af;
+        font-style: italic;
+    }
+
+    .edit-form {
+        display: none;
+    }
+
+    .edit-form.active {
+        display: block;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .btn-save:hover {
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-cancel {
+        background: #e5e7eb;
+        color: #374151;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .btn-cancel:hover {
+        background: #d1d5db;
+    }
+
+    .upload-section {
+        background: #f9fafb;
+        padding: 20px;
+        border-radius: 8px;
+        border: 2px dashed #e5e7eb;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .upload-section input[type="file"] {
+        display: none;
+    }
+
+    .upload-label {
+        cursor: pointer;
+        color: #667eea;
+        font-weight: 600;
+    }
+
+    .upload-label:hover {
+        color: #764ba2;
+    }
+
+    .document-list {
+        margin-top: 20px;
+    }
+
+    .document-item {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #e5e7eb;
+    }
+
+    .document-item .name {
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .document-item .date {
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    .alert {
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #065f46;
+        border-left-color: #10b981;
+    }
+
+    .alert-info {
+        background: #eff6ff;
+        color: #0c4a6e;
+        border-left-color: #0ea5e9;
+    }
+
+    .alert-warning {
+        background: #fef3c7;
+        color: #92400e;
+        border-left-color: #f59e0b;
+    }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-sidebar {
+            order: 2;
+        }
+
+        .profile-content {
+            order: 1;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-tabs {
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<div class="profile-header">
+    <h2>User Profile</h2>
+    <p>Manage your personal and financial information</p>
+</div>
+
+<div class="profile-container">
+    <!-- Sidebar -->
+    <div class="profile-sidebar">
+        <div class="profile-avatar">
+            <i class="bi bi-person-circle"></i>
+        </div>
+        <div class="profile-name">
+            <h4>{{ current_user.full_name }}</h4>
+            <p>{{ current_user.email }}</p>
+        </div>
+        <div class="profile-status">
+            ✓ Profile Complete
+        </div>
+        <div class="profile-actions">
+            <button class="btn-profile primary" onclick="scrollToTab('personal')">Edit Profile</button>
+            <button class="btn-profile" onclick="scrollToTab('documents')">Documents</button>
+            <a href="{{ url_for('auth.logout') }}" class="btn-profile">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-content">
+        <!-- Tabs -->
+        <div class="profile-tabs">
+            <button class="profile-tab active" onclick="switchTab(event, 'personal')">
+                <i class="bi bi-person"></i> Personal Info
+            </button>
+            <button class="profile-tab" onclick="switchTab(event, 'contact')">
+                <i class="bi bi-telephone"></i> Contact
+            </button>
+            <button class="profile-tab" onclick="switchTab(event, 'documents')">
+                <i class="bi bi-file-earmark"></i> Documents
+            </button>
+            <button class="profile-tab" onclick="switchTab(event, 'bank')">
+                <i class="bi bi-bank"></i> Bank Details
+            </button>
+        </div>
+
+        <!-- Personal Info Tab -->
+        <div id="personal" class="profile-tab-content active">
+            <div class="profile-field">
+                <label>Full Name</label>
+                <div class="profile-field-value">{{ current_user.full_name }}</div>
+            </div>
+            <div class="form-row">
+                <div class="profile-field">
+                    <label>Gender</label>
+                    <div class="profile-field-value {% if not current_user.gender %}empty{% endif %}">
+                        {{ current_user.gender or 'Not specified' }}
+                    </div>
+                </div>
+                <div class="profile-field">
+                    <label>Age</label>
+                    <div class="profile-field-value {% if not current_user.age %}empty{% endif %}">
+                        {{ current_user.age or 'Not specified' }}
+                    </div>
+                </div>
+            </div>
+            <div class="profile-field">
+                <label>Address</label>
+                <div class="profile-field-value {% if not current_user.address %}empty{% endif %}">
+                    {{ current_user.address or 'Not specified' }}
+                </div>
+            </div>
+            <button class="btn-profile primary" onclick="toggleEdit('personal')">Edit Information</button>
+
+            <!-- Edit Form -->
+            <div class="edit-form" id="edit-personal">
+                <form method="POST" action="{{ url_for('user.update_profile') }}" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="full_name" value="{{ current_user.full_name }}" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select name="gender">
+                                <option value="">Select Gender</option>
+                                <option value="Female" {% if current_user.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Male" {% if current_user.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Other" {% if current_user.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" name="age" value="{{ current_user.age or '' }}" min="18" max="100">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea name="address" rows="3">{{ current_user.address or '' }}</textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">Save Changes</button>
+                        <button type="button" class="btn-cancel" onclick="toggleEdit('personal')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Contact Tab -->
+        <div id="contact" class="profile-tab-content">
+            <div class="profile-field">
+                <label>Email Address</label>
+                <div class="profile-field-value">{{ current_user.email }}</div>
+            </div>
+            <div class="profile-field">
+                <label>Phone Number</label>
+                <div class="profile-field-value {% if not current_user.phone %}empty{% endif %}">
+                    {{ current_user.phone or 'Not specified' }}
+                </div>
+            </div>
+            <button class="btn-profile primary" onclick="toggleEdit('contact')">Edit Contact</button>
+
+            <!-- Edit Form -->
+            <div class="edit-form" id="edit-contact">
+                <form method="POST" action="{{ url_for('user.update_profile') }}" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" value="{{ current_user.phone or '' }}" placeholder="+91 9876543210">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">Save Changes</button>
+                        <button type="button" class="btn-cancel" onclick="toggleEdit('contact')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Documents Tab -->
+        <div id="documents" class="profile-tab-content">
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Upload your government-issued documents for verification
+            </div>
+
+            <div class="profile-field">
+                <label>Aadhaar Number</label>
+                <div class="profile-field-value {% if not current_user.aadhaar_number %}empty{% endif %}">
+                    {% if current_user.aadhaar_number %}
+                        XXXX XXXX {{ current_user.aadhaar_number[-4:] }}
+                    {% else %}
+                        Not specified
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="profile-field">
+                <label>PAN Card Number</label>
+                <div class="profile-field-value {% if not current_user.pan_number %}empty{% endif %}">
+                    {{ current_user.pan_number or 'Not specified' }}
+                </div>
+            </div>
+
+            <button class="btn-profile primary" onclick="toggleEdit('documents')">Edit Documents</button>
+
+            <!-- Edit Form -->
+            <div class="edit-form" id="edit-documents">
+                <form method="POST" action="{{ url_for('user.update_profile') }}" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Aadhaar Number</label>
+                        <input type="text" name="aadhaar_number" value="{{ current_user.aadhaar_number or '' }}" placeholder="12345678901234" maxlength="12">
+                    </div>
+                    <div class="form-group">
+                        <label>PAN Card Number</label>
+                        <input type="text" name="pan_number" value="{{ current_user.pan_number or '' }}" placeholder="AAAAA0000A">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">Save Changes</button>
+                        <button type="button" class="btn-cancel" onclick="toggleEdit('documents')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Bank Details Tab -->
+        <div id="bank" class="profile-tab-content">
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle"></i> Your bank details are encrypted and secure
+            </div>
+
+            <div class="profile-field">
+                <label>Account Number</label>
+                <div class="profile-field-value {% if not current_user.bank_account_number %}empty{% endif %}">
+                    {% if current_user.bank_account_number %}
+                        XXXX XXXX {{ current_user.bank_account_number[-4:] }}
+                    {% else %}
+                        Not specified
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="profile-field">
+                <label>IFSC Code</label>
+                <div class="profile-field-value {% if not current_user.ifsc_code %}empty{% endif %}">
+                    {{ current_user.ifsc_code or 'Not specified' }}
+                </div>
+            </div>
+
+            <button class="btn-profile primary" onclick="toggleEdit('bank')">Edit Bank Details</button>
+
+            <!-- Edit Form -->
+            <div class="edit-form" id="edit-bank">
+                <form method="POST" action="{{ url_for('user.update_profile') }}" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Bank Account Number</label>
+                        <input type="text" name="bank_account_number" value="{{ current_user.bank_account_number or '' }}" placeholder="Account Number">
+                    </div>
+                    <div class="form-group">
+                        <label>IFSC Code</label>
+                        <input type="text" name="ifsc_code" value="{{ current_user.ifsc_code or '' }}" placeholder="SBIN0001234">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">Save Changes</button>
+                        <button type="button" class="btn-cancel" onclick="toggleEdit('bank')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(event, tabName) {
+        // Hide all tabs
+        const tabs = document.querySelectorAll('.profile-tab-content');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        
+        // Remove active from all buttons
+        const buttons = document.querySelectorAll('.profile-tab');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        
+        // Show selected tab
+        document.getElementById(tabName).classList.add('active');
+        event.target.closest('.profile-tab').classList.add('active');
+    }
+
+    function toggleEdit(section) {
+        const editForm = document.getElementById('edit-' + section);
+        editForm.classList.toggle('active');
+    }
+
+    function scrollToTab(tabName) {
+        const tab = document.getElementById(tabName);
+        if (tab) {
+            const buttons = document.querySelectorAll('.profile-tab');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes('Personal') && tabName === 'personal') {
+                    btn.click();
+                } else if (btn.textContent.includes('Contact') && tabName === 'contact') {
+                    btn.click();
+                } else if (btn.textContent.includes('Documents') && tabName === 'documents') {
+                    btn.click();
+                }
+            });
+            tab.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+
+{% endblock %}

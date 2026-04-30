@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .top-navbar, .sidebar {
+        display: none !important;
+    }
+
+    .main-content {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    .register-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 600px;
+        width: 95%;
+        padding: 40px;
+        animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .register-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 10px;
+    }
+
+    .register-header p {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .login-section {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .login-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .login-link:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+
+    .alert {
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid;
+    }
+
+    .alert-danger {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left-color: #dc2626;
+    }
+
+    .alert-info {
+        background: #eff6ff;
+        color: #0c4a6e;
+        border-left-color: #0ea5e9;
+    }
+
+    .error-message {
+        color: #dc2626;
+        font-size: 0.85rem;
+        margin-top: 5px;
+    }
+
+    .form-info {
+        background: #f0f9ff;
+        padding: 12px 15px;
+        border-radius: 8px;
+        border-left: 4px solid #0ea5e9;
+        color: #0c4a6e;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="register-container">
+        <div class="register-header">
+            <h2>Create Account</h2>
+            <p>Join Women GateWay Community</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'danger' else 'info' }}">
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="form-info">
+            ℹ️ All fields are required to complete registration
+        </div>
+
+        <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+
+            <!-- Full Name -->
+            <div class="form-group">
+                {{ form.full_name.label }}
+                {{ form.full_name(class="form-control") }}
+                {% if form.full_name.errors %}
+                    <div class="error-message">
+                        {% for error in form.full_name.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Email & Phone (Row) -->
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.email.label }}
+                    {{ form.email(type="email", class="form-control") }}
+                    {% if form.email.errors %}
+                        <div class="error-message">
+                            {% for error in form.email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.phone.label }}
+                    {{ form.phone(class="form-control") }}
+                    {% if form.phone.errors %}
+                        <div class="error-message">
+                            {% for error in form.phone.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Aadhaar & PAN (Row) -->
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.aadhaar_number.label }}
+                    {{ form.aadhaar_number(placeholder="12 digits", class="form-control") }}
+                    {% if form.aadhaar_number.errors %}
+                        <div class="error-message">
+                            {% for error in form.aadhaar_number.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.pan_number.label }}
+                    {{ form.pan_number(placeholder="e.g., AAAAA0000A", class="form-control") }}
+                    {% if form.pan_number.errors %}
+                        <div class="error-message">
+                            {% for error in form.pan_number.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Bank Account & IFSC (Row) -->
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.bank_account_number.label }}
+                    {{ form.bank_account_number(class="form-control") }}
+                    {% if form.bank_account_number.errors %}
+                        <div class="error-message">
+                            {% for error in form.bank_account_number.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.ifsc_code.label }}
+                    {{ form.ifsc_code(class="form-control") }}
+                    {% if form.ifsc_code.errors %}
+                        <div class="error-message">
+                            {% for error in form.ifsc_code.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+                {{ form.address.label }}
+                {{ form.address(rows="3", class="form-control") }}
+                {% if form.address.errors %}
+                    <div class="error-message">
+                        {% for error in form.address.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Password & Confirm Password (Row) -->
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.password.label }}
+                    {{ form.password(type="password", class="form-control") }}
+                    {% if form.password.errors %}
+                        <div class="error-message">
+                            {% for error in form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password_confirm.label }}
+                    {{ form.password_confirm(type="password", class="form-control") }}
+                    {% if form.password_confirm.errors %}
+                        <div class="error-message">
+                            {% for error in form.password_confirm.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            {{ form.submit(class="submit-btn") }}
+        </form>
+
+        <div class="login-section">
+            <p style="color: #6b7280; font-size: 0.9rem;">Already have an account?</p>
+            <a href="{{ url_for('auth.login') }}" class="login-link">Sign In Here</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

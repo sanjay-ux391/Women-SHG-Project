@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <h3 class="mb-3">{{ t('Seal Data (Financial Proof)') }}</h3>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">{{ t('Savings Proof') }}</h6>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>{{ t('Month') }}</th>
+                                <th>{{ t('Amount') }}</th>
+                                <th>{{ t('Payment Date') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in savings %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ s.month }}</td>
+                                <td>₹{{ '%.2f'|format(s.amount) }}</td>
+                                <td>{{ s.payment_date }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">
+                                    {{ t('No savings records.') }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">{{ t('Loan Proof') }}</h6>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>{{ t('Amount') }}</th>
+                                <th>{{ t('Issue Date') }}</th>
+                                <th>{{ t('Status') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for loan in loans %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>₹{{ '%.2f'|format(loan.loan_amount) }}</td>
+                                <td>{{ loan.issue_date }}</td>
+                                <td>{{ loan.status }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">
+                                    {{ t('No loan records.') }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

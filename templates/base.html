@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="{{ 'ta' if lang == 'ta' else 'en' }}">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Women GateWay{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-lighter: #f3f4f6;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+            background-color: var(--bg-lighter);
+        }
+
+        /* Top Navbar */
+        .top-navbar {
+            background: var(--primary-gradient);
+            box-shadow: var(--shadow-md);
+            border-bottom: none;
+        }
+
+        .top-navbar .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .top-navbar .nav-link {
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .top-navbar .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        .top-navbar .btn-link {
+            color: white !important;
+            text-decoration: none;
+        }
+
+        .top-navbar .btn-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            min-height: 100vh;
+        }
+
+        .sidebar-link {
+            color: var(--text-secondary);
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .sidebar-link i {
+            font-size: 1.2rem;
+            min-width: 24px;
+        }
+
+        .sidebar-link:hover {
+            background-color: var(--bg-light);
+            color: var(--primary-color);
+        }
+
+        .sidebar-link.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Main Content */
+        .main-content {
+            background-color: var(--bg-lighter);
+            min-height: calc(100vh - 56px);
+            padding: 30px;
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 15px 15px 0 0;
+            padding: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .stat-card .card-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+        }
+
+        .stat-card h4 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-card p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .icon-circle.bg-primary { background: var(--primary-color); }
+        .icon-circle.bg-success { background: var(--success-color); }
+        .icon-circle.bg-warning { background: var(--warning-color); }
+        .icon-circle.bg-danger { background: var(--danger-color); }
+        .icon-circle.bg-info { background: var(--info-color); }
+
+        /* Tables */
+        .table {
+            color: var(--text-primary);
+        }
+
+        .table thead {
+            background-color: var(--bg-light);
+        }
+
+        .table thead th {
+            border-color: var(--border-color);
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody td {
+            border-color: var(--border-color);
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--bg-light);
+        }
+
+        /* Forms */
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 11px 15px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            color: white;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Alerts */
+        .alert {
+            border: none;
+            border-left: 4px solid;
+            border-radius: 10px;
+            padding: 15px 20px;
+        }
+
+        .alert-success {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border-left-color: var(--success-color);
+        }
+
+        .alert-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-left-color: var(--danger-color);
+        }
+
+        .alert-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+            border-left-color: var(--warning-color);
+        }
+
+        .alert-info {
+            background-color: #eff6ff;
+            color: #0c4a6e;
+            border-left-color: var(--info-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                width: 250px;
+                z-index: 1000;
+                transition: left 0.3s;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark top-navbar shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">
+            <i class="bi bi-wallet2 me-1"></i> Women GateWay
+        </a>
+        <div class="d-flex align-items-center ms-auto">
+            <!-- Language Switcher -->
+            <div class="me-3">
+                <a href="?lang=en" class="btn btn-sm btn-outline-light {% if lang == 'en' %}active{% endif %}">EN</a>
+                <a href="?lang=ta" class="btn btn-sm btn-outline-light {% if lang == 'ta' %}active{% endif %}">TA</a>
+            </div>
+            
+            <!-- Notifications -->
+            <button class="btn btn-link text-white position-relative me-3">
+                <i class="bi bi-bell fs-5"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
+            </button>
+
+            <!-- Profile Dropdown -->
+            {% if current_user.is_authenticated %}
+            <div class="dropdown">
+                <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle fs-4 me-2"></i>
+                    <span class="small">{{ current_user.full_name }}</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdown">
+                    <li><h6 class="dropdown-header">{{ current_user.email }}</h6></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ url_for('user.profile') }}"><i class="bi bi-gear me-2"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <!-- Sidebar -->
+        {% if current_user.is_authenticated %}
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 sidebar bg-white shadow-sm">
+            <div class="d-flex flex-column align-items-sm-start px-3 pt-3 min-vh-100">
+                {% if current_user.is_admin() %}
+                <!-- Admin Menu -->
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('admin.admin_dashboard') }}" class="nav-link sidebar-link {% if request.endpoint == 'admin.admin_dashboard' %}active{% endif %}">
+                            <i class="bi bi-speedometer2 me-2"></i><span>{{ t('Dashboard') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('admin.subadmin_list') }}" class="nav-link sidebar-link {% if 'subadmin' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-people me-2"></i><span>{{ t('Subadmin Management') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('admin.durable_payments') }}" class="nav-link sidebar-link {% if 'durable_payments' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-credit-card-2-front me-2"></i><span>{{ t('Durable Payments') }}</span>
+                        </a>
+                    </li>
+                </ul>
+                {% else %}
+                <!-- User Menu -->
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu-user">
+                    <li class="nav-item">
+                        <a href="{{ url_for('user.user_dashboard') }}" class="nav-link sidebar-link {% if request.endpoint == 'user.user_dashboard' %}active{% endif %}">
+                            <i class="bi bi-speedometer2 me-2"></i><span>{{ t('Dashboard') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user.finance_dashboard') }}" class="nav-link sidebar-link {% if 'finance_dashboard' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-cash-coin me-2"></i><span>{{ t('Finance Dashboard') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user.grow_scheme') }}" class="nav-link sidebar-link {% if 'grow_scheme' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-graph-up-arrow me-2"></i><span>{{ t('Grow Scheme') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user.attendee_meeting') }}" class="nav-link sidebar-link {% if 'attendee_meeting' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-people-fill me-2"></i><span>{{ t('Attendee Meeting') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user.seal_data') }}" class="nav-link sidebar-link {% if 'seal_data' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-file-earmark-text me-2"></i><span>{{ t('Seal Data') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user.pending_sealed') }}" class="nav-link sidebar-link {% if 'pending_sealed' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-clipboard-check me-2"></i><span>{{ t('Pending Sealed Users') }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user.bot') }}" class="nav-link sidebar-link {% if 'bot' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-robot me-2"></i><span>{{ t('AI Assistant') }}</span>
+                        </a>
+                    </li>
+                </ul>
+                {% endif %}
+                <hr class="w-100">
+                <p class="small text-muted mb-3">Women SHG Platform</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Main Content -->
+        <main class="col py-3 main-content">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="container-fluid mb-2">
+                {% for category, msg in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <!-- Page Content -->
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>
