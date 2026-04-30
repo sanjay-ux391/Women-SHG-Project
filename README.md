@@ -209,9 +209,3 @@ Key uniqueness:
 This project is intended for educational and social impact purposes.
 
 ---
-
-## 14. Author
-
-**Sanjay**
-📧 [your-email@sanjaypriyan0987@gmail.com]
-🔗 [https://github.com/sanjay-ux391]
